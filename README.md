@@ -1,4 +1,9 @@
-## RESTful web service for payments processing
+# RESTful web service for payments processing
+
+
+
+## Payment module:
+_For all the payment operations and logging._
 
 **Run the application:**
 `./gradlew bootRun`
@@ -13,3 +18,8 @@ http://localhost:8081/actuator/health
 http://localhost:8081/actuator/database
 
 **GeoLite2 database is used to find user location by ip address**
+
+
+## Audit module:
+
+_Payment module notifies this module when endpoints of payment module are called._
