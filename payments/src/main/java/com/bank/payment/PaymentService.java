@@ -11,6 +11,8 @@ import java.time.Duration;
 import java.util.Collection;
 
 import static com.bank.payment.PaymentStatus.CANCELLED;
+import static com.bank.payment.PaymentType.TYPE1;
+import static com.bank.payment.PaymentType.TYPE2;
 import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
@@ -31,7 +33,9 @@ public class PaymentService {
         OkError okError = hasErrors(request);
         if (okError == null) {
             paymentRepository.createNewPayment(request);
-            if (!paymentNotifier.notifyExternalServiceSuccessful(request.getPaymentType().value)) {
+            PaymentType paymentType = request.getPaymentType();
+            if ((paymentType.equals(TYPE1) || paymentType.equals(TYPE2))
+                    && !paymentNotifier.notifyExternalServiceSuccessful(paymentType.value)) {
                 notificationRepository.saveUnsuccessfulNotify(request);
             }
             return null;
@@ -46,8 +50,8 @@ public class PaymentService {
         } catch (Exception e) {
             throw new PaymentException("Not possible to cancel payment with id: " + paymentId);
         }
-        if (!payment.getCreatedAt().toLocalDate().equals(DateTime.now().toLocalDate())) {
-            throw new PaymentException("Only payments created today can be cancelled!");
+        if (payment == null || !payment.getCreatedAt().toLocalDate().equals(DateTime.now().toLocalDate())) {
+            throw new PaymentException("Only not already cancelled payments that are created today can be cancelled!");
         }
 
         BigDecimal fee = calculateFee(payment);
@@ -87,7 +91,7 @@ public class PaymentService {
         if (isEmpty(request.getCreditorIban()))
             return new OkError("1005", "invalid_creditor_iban");
 
-        if (request.getPaymentType().equals(PaymentType.TYPE1)) {
+        if (request.getPaymentType().equals(TYPE1)) {
             if (!"EUR".equals(request.getCurrency()))
                 return new OkError("1100", "invalid_currency");
             if (isEmpty(request.getDetails()))
@@ -95,7 +99,7 @@ public class PaymentService {
             if (!isEmpty(request.getCreditorBankBIC()))
                 return new OkError("1102", "bic_not_allowed");
         }
-        if (request.getPaymentType().equals(PaymentType.TYPE2)) {
+        if (request.getPaymentType().equals(TYPE2)) {
             if (!"USD".equals(request.getCurrency()))
                 return new OkError("1200", "invalid_currency");
             if (!isEmpty(request.getCreditorBankBIC()))
@@ -109,5 +113,4 @@ public class PaymentService {
         }
         return null;
     }
-
 }

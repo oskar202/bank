@@ -330,7 +330,7 @@ class PaymentServiceTest {
         verify(paymentRepository, never()).cancelPayment(payment);
 
         PaymentException exception = assertThrows(PaymentException.class, () -> paymentService.cancelPayment(payment.getId()));
-        assertThat(exception.getMessage()).isEqualTo("Only payments created today can be cancelled!");
+        assertThat(exception.getMessage()).isEqualTo("Only not already cancelled payments that are created today can be cancelled!");
     }
 
     @Test

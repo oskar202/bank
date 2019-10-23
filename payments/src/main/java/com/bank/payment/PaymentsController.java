@@ -45,7 +45,7 @@ public class PaymentsController {
     @PostMapping("cancel-payment")
     public ResponseEntity postPayment(@RequestBody Long paymentId) {
         log.info("cancel-payment endpoint accessed from: " + clientCountry.getUserLocationByIp());
-        PaymentCancelResponse paymentCancelResponse = paymentService.cancelPayment(paymentId);
-        return ResponseEntity.ok(paymentCancelResponse);
+        PaymentCancelResponse response = paymentService.cancelPayment(paymentId);
+        return ResponseEntity.ok(response);
     }
 }
