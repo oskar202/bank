@@ -9,15 +9,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "audit-payment", produces = "application/json")
 public class AuditController {
 
-    @GetMapping("type1")
-    public ResponseEntity logOnePayment() {
-        //TODO
+    @GetMapping("type1-payment")
+    public ResponseEntity onePayment() {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("type2")
-    public ResponseEntity logSecondPayment() {
-        //TODO
+    @GetMapping("type2-payment")
+    public ResponseEntity secondPayment() {
         return ResponseEntity.ok().build();
     }
 }

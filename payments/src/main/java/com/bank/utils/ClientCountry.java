@@ -24,9 +24,8 @@ public class ClientCountry {
             }
             return getLocation(ip);
         } catch (IOException | GeoIp2Exception e) {
-            //do nothing
+            return "Unknown location";
         }
-        return "Unknown location";
     }
 
     private String getLocation(String ip) throws IOException, GeoIp2Exception {

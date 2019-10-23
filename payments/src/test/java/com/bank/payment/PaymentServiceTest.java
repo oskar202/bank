@@ -21,7 +21,9 @@ import static org.mockito.Mockito.*;
 class PaymentServiceTest {
 
     private PaymentRepository paymentRepository = mock(PaymentRepository.class);
-    private PaymentService paymentService = new PaymentService(paymentRepository);
+    private PaymentNotifier paymentNotifier = mock(PaymentNotifier.class);
+    private NotificationRepository notificationRepository = mock(NotificationRepository.class);
+    private PaymentService paymentService = new PaymentService(paymentRepository, paymentNotifier, notificationRepository);
 
     @Before
     public void setUp() {

@@ -11,21 +11,29 @@ import java.time.Duration;
 import java.util.Collection;
 
 import static com.bank.payment.PaymentStatus.CANCELLED;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 @Slf4j
 public class PaymentService {
 
     private PaymentRepository paymentRepository;
+    private final PaymentNotifier paymentNotifier;
+    private final NotificationRepository notificationRepository;
 
-    public PaymentService(PaymentRepository paymentRepository) {
+    public PaymentService(PaymentRepository paymentRepository, PaymentNotifier paymentNotifier, NotificationRepository notificationRepository) {
         this.paymentRepository = paymentRepository;
+        this.paymentNotifier = paymentNotifier;
+        this.notificationRepository = notificationRepository;
     }
 
     public OkError createPayment(PaymentCreationRequest request) {
         OkError okError = hasErrors(request);
         if (okError == null) {
             paymentRepository.createNewPayment(request);
+            if (!paymentNotifier.notifyExternalServiceSuccessful(request.getPaymentType().value)) {
+                notificationRepository.saveUnsuccessfulNotify(request);
+            }
             return null;
         }
         return okError;
@@ -72,31 +80,31 @@ public class PaymentService {
             return new OkError("1001", "invalid_request");
         if (request.getAmount().compareTo(new BigDecimal(0)) < 1)
             return new OkError("1002", "invalid_amount");
-        if (request.getCurrency() == null)
+        if (isEmpty(request.getCurrency()))
             return new OkError("1003", "invalid_currency");
-        if (request.getDebtorIban() == null)
+        if (isEmpty(request.getDebtorIban()))
             return new OkError("1004", "invalid_debtor_iban");
-        if (request.getCreditorIban() == null)
+        if (isEmpty(request.getCreditorIban()))
             return new OkError("1005", "invalid_creditor_iban");
 
         if (request.getPaymentType().equals(PaymentType.TYPE1)) {
             if (!"EUR".equals(request.getCurrency()))
                 return new OkError("1100", "invalid_currency");
-            if (request.getDetails() == null)
+            if (isEmpty(request.getDetails()))
                 return new OkError("1101", "invalid_details");
-            if (request.getCreditorBankBIC() != null)
+            if (!isEmpty(request.getCreditorBankBIC()))
                 return new OkError("1102", "bic_not_allowed");
         }
         if (request.getPaymentType().equals(PaymentType.TYPE2)) {
             if (!"USD".equals(request.getCurrency()))
                 return new OkError("1200", "invalid_currency");
-            if (request.getCreditorBankBIC() != null)
+            if (!isEmpty(request.getCreditorBankBIC()))
                 return new OkError("1201", "bic_not_allowed");
         }
         if (request.getPaymentType().equals(PaymentType.TYPE3)) {
             if (!"EUR".equals(request.getCurrency()) && !"USD".equals(request.getCurrency()))
                 return new OkError("1300", "invalid_currency");
-            if (request.getCreditorBankBIC() == null)
+            if (isEmpty(request.getCreditorBankBIC()))
                 return new OkError("1301", "invalid_bic");
         }
         return null;

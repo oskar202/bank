@@ -68,7 +68,4 @@ public class PaymentRepository {
         return database.values();
     }
 
-    public Payment getById(Long paymentId) {
-        return database.get(String.valueOf(paymentId));
-    }
 }
