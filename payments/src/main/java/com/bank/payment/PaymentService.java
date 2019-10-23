@@ -67,7 +67,12 @@ public class PaymentService {
     }
 
     public PaymentResponse getCancelledPaymentById(Long paymentId) {
-        BigDecimal cancellationFee = paymentRepository.findCancellationFeeById(paymentId);
+        BigDecimal cancellationFee;
+        try {
+            cancellationFee = paymentRepository.findCancellationFeeById(paymentId);
+        } catch (Exception e) {
+            throw new PaymentException("Payment not found!");
+        }
         return PaymentResponse.builder()
                 .paymentId(paymentId)
                 .cancellationFee(cancellationFee)
