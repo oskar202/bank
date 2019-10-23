@@ -1,6 +1,10 @@
-package com.bank.payment;
+package com.bank.payment.controller;
 
 import com.bank.OkError;
+import com.bank.payment.entity.PaymentCancelResponse;
+import com.bank.payment.entity.PaymentCreationRequest;
+import com.bank.payment.entity.PaymentResponse;
+import com.bank.payment.service.PaymentService;
 import com.bank.utils.ClientCountry;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

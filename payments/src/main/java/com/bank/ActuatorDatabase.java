@@ -1,8 +1,8 @@
 package com.bank;
 
-import com.bank.payment.NotificationRepository;
-import com.bank.payment.Payment;
-import com.bank.payment.PaymentRepository;
+import com.bank.payment.entity.Payment;
+import com.bank.payment.repository.NotificationRepository;
+import com.bank.payment.repository.PaymentRepository;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.springframework.boot.actuate.endpoint.web.annotation.RestControllerEndpoint;

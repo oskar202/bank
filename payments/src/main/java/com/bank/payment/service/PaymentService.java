@@ -1,8 +1,16 @@
-package com.bank.payment;
+package com.bank.payment.service;
 
 
 import com.bank.DateTime;
 import com.bank.OkError;
+import com.bank.payment.PaymentException;
+import com.bank.payment.PaymentType;
+import com.bank.payment.entity.Payment;
+import com.bank.payment.entity.PaymentCancelResponse;
+import com.bank.payment.entity.PaymentCreationRequest;
+import com.bank.payment.entity.PaymentResponse;
+import com.bank.payment.repository.NotificationRepository;
+import com.bank.payment.repository.PaymentRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +43,7 @@ public class PaymentService {
             paymentRepository.createNewPayment(request);
             PaymentType paymentType = request.getPaymentType();
             if ((paymentType.equals(TYPE1) || paymentType.equals(TYPE2))
-                    && !paymentNotifier.notifyExternalServiceSuccessful(paymentType.value)) {
+                    && !paymentNotifier.notifyExternalServiceSuccessful(paymentType.getValue())) {
                 notificationRepository.saveUnsuccessfulNotify(request);
             }
             return null;
@@ -81,7 +89,7 @@ public class PaymentService {
 
     private BigDecimal calculateFee(Payment payment) {
         long hours = Duration.between(payment.getCreatedAt(), DateTime.now()).toHours();
-        return payment.getPaymentType().coefficient.multiply(BigDecimal.valueOf(hours));
+        return payment.getPaymentType().getCoefficient().multiply(BigDecimal.valueOf(hours));
     }
 
     private OkError hasErrors(PaymentCreationRequest request) {

@@ -1,4 +1,4 @@
-package com.bank.payment;
+package com.bank.payment.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,8 +11,7 @@ import java.math.BigDecimal;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PaymentResponse {
-
-    private Long paymentId;
+public class PaymentCancelResponse {
     private BigDecimal cancellationFee;
+    private String currency;
 }

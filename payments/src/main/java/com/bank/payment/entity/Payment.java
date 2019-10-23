@@ -1,6 +1,8 @@
-package com.bank.payment;
+package com.bank.payment.entity;
 
 
+import com.bank.payment.PaymentStatus;
+import com.bank.payment.PaymentType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

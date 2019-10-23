@@ -1,5 +1,7 @@
-package com.bank.payment;
+package com.bank.payment.repository;
 
+import com.bank.payment.entity.Payment;
+import com.bank.payment.entity.PaymentCreationRequest;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -22,7 +24,7 @@ public class PaymentRepository {
 
     private static long sequence = 1;
 
-    void createNewPayment(PaymentCreationRequest request) {
+    public void createNewPayment(PaymentCreationRequest request) {
         long id = sequence++;
         Payment payment = Payment.builder()
                 .id(id)
@@ -43,7 +45,7 @@ public class PaymentRepository {
         return database.get(String.valueOf(paymentId)).getCancellationFee();
     }
 
-    void cancelPayment(Payment payment) {
+    public void cancelPayment(Payment payment) {
         database.put(String.valueOf(payment.getId()), payment);
     }
 

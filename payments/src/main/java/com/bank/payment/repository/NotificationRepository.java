@@ -1,5 +1,7 @@
-package com.bank.payment;
+package com.bank.payment.repository;
 
+import com.bank.payment.entity.Payment;
+import com.bank.payment.entity.PaymentCreationRequest;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -14,7 +16,7 @@ public class NotificationRepository {
 
     private static long sequence = 1;
 
-    void saveUnsuccessfulNotify(PaymentCreationRequest request) {
+    public void saveUnsuccessfulNotify(PaymentCreationRequest request) {
         long id = sequence++;
         Payment payment = Payment.builder()
                 .id(id)
