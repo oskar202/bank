@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequestMapping(value = "v2/payment")
+@RequestMapping(value = "v1/payments")
 @Slf4j
 public class PaymentsController {
 
@@ -25,31 +25,35 @@ public class PaymentsController {
         this.clientCountry = clientCountry;
     }
 
-    @PostMapping("create-payment")
-    public ResponseEntity createPayment(@RequestBody PaymentCreationRequest request) {
+    @PostMapping
+    public ResponseEntity<OkError> createPayment(@RequestBody PaymentCreationRequest request) {
         log.info("create-payment endpoint accessed from: " + clientCountry.getUserLocationByIp());
         OkError result = paymentService.createPayment(request);
-        return ResponseEntity.ok(result);
+        if (result == null) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().body(result);
+        }
     }
 
-    @GetMapping("get-payments")
-    public ResponseEntity getPayments() {
+    @GetMapping
+    public ResponseEntity<Collection<Long>> getPayments() {
         log.info("get-payments endpoint accessed from: " + clientCountry.getUserLocationByIp());
         Collection<Long> response = paymentService.getAllNotCancelledSortedPaymentIds();
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping("get-payment/{paymentId}")
-    public ResponseEntity getPaymentById(@PathVariable Long paymentId) {
+    @GetMapping("{paymentId}")
+    public ResponseEntity<PaymentResponse> getPaymentById(@PathVariable Long paymentId) {
         log.info("get-payment/" + paymentId + " endpoint accessed from: " + clientCountry.getUserLocationByIp());
         PaymentResponse response = paymentService.getCancelledPaymentById(paymentId);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().body(response);
     }
 
-    @PostMapping("cancel-payment")
-    public ResponseEntity postPayment(@RequestBody Long paymentId) {
+    @DeleteMapping("{paymentId}")
+    public ResponseEntity<PaymentCancelResponse> cancelPayment(@PathVariable Long paymentId) {
         log.info("cancel-payment endpoint accessed from: " + clientCountry.getUserLocationByIp());
         PaymentCancelResponse response = paymentService.cancelPayment(paymentId);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok().body(response);
     }
 }

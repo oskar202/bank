@@ -23,10 +23,6 @@ repositories {
     mavenCentral()
 }
 
-springBoot {
-    mainClassName = 'file:///home/oskarl/IdeaProjects/bank/payments/src/main/java/com/bank/PaymentsApplication.java'
-}
-
 dependencies {
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: "${springBootVersion}"
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: "${springBootVersion}"
