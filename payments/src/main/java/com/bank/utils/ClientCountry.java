@@ -3,6 +3,7 @@ package com.bank.utils;
 import com.maxmind.geoip2.DatabaseReader;
 import com.maxmind.geoip2.exception.GeoIp2Exception;
 import com.maxmind.geoip2.model.CountryResponse;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
@@ -15,9 +16,12 @@ import java.net.URL;
 @Service
 public class ClientCountry {
 
+    @Value("${host.external.client.ip}")
+    private String ipApiUrl;
+
     public String getUserLocationByIp() {
         try {
-            URL whatIsMyIP = new URL("https://ipv4.icanhazip.com/");
+            URL whatIsMyIP = new URL(ipApiUrl);
             String ip; // When not running in localhost, ip should be taken from: HttpServletRequest getRemoteHost()
             try (BufferedReader in = new BufferedReader(new InputStreamReader(whatIsMyIP.openStream()))) {
                 ip = in.readLine();
