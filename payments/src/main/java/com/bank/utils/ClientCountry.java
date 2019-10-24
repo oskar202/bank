@@ -29,7 +29,7 @@ public class ClientCountry {
     }
 
     private String getLocation(String ip) throws IOException, GeoIp2Exception {
-        File database = new File("src/main/resources/GeoLite2-Country.mmdb");
+        File database = new File("payments/src/main/resources/GeoLite2-Country.mmdb");
         DatabaseReader dbReader = new DatabaseReader.Builder(database).build();
 
         InetAddress ipAddress = InetAddress.getByName(ip);
