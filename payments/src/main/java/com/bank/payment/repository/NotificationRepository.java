@@ -14,7 +14,7 @@ import static java.time.LocalDateTime.now;
 public class NotificationRepository {
     private Map<String, Payment> database = new HashMap<>();
 
-    private static long sequence = 1;
+    private long sequence = 1;
 
     public void saveUnsuccessfulNotify(PaymentCreationRequest request) {
         long id = sequence++;

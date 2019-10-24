@@ -22,7 +22,7 @@ import static java.util.stream.Collectors.toList;
 public class PaymentRepository {
     private Map<String, Payment> database = new HashMap<>();
 
-    private static long sequence = 1;
+    private long sequence = 1;
 
     public void createNewPayment(PaymentCreationRequest request) {
         long id = sequence++;
